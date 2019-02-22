@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import tabData, { cardData } from '../../data';
 import Tabs from './Tabs';
 import Cards from './Cards';
 
@@ -30,11 +29,11 @@ export default class Content extends Component {
     // this function should take in the tab and update the state with the new tab.
     this.setState({
       ...this.state,
-      tabs: [...this.state.tabs, tab]
+      selected: tab
     })
   };
 
-  filterCards = (e, selectedTab) => {
+  filterCards = () => {
     /* Right now this function only returns the cards on state.
       We're going to make this function more dynamic
       by using it to filter out our cards for when a tab is selcted
@@ -48,18 +47,13 @@ export default class Content extends Component {
         - else, it should only return those cards whose 'tab' matched this.state.selected.
     */
 
-    if(selectedTab === 'all'){
-      this.setState({
-        ...this.state,
-        cards: cardData
-      })
+   const filteredCards = this.state.cards.filter(card => card.tab === this.state.selected);
+
+    if(this.state.selected === 'all'){
+      return this.state.cards;
     } else {
-      this.setState({
-        ...this.state,
-        cards: this.state.cards.fitler(card => card.tab === selectedTab)
-      })
+      return filteredCards;
     }
-    return this.state.cards;
   };
 
   render() {
@@ -70,7 +64,7 @@ export default class Content extends Component {
           `selectedTab` that includes the currently selected tab
           and `selectTabHandler` that includes the function to change the selected tab
         */}
-        <Tabs tabs={this.state.tabs} selectedTab={selectedTab} selectTabHandler={selectTabHandler} />
+        <Tabs tabs={this.state.tabs} selectedTab={this.state.selected} selectTabHandler={this.changeSelected} />
         <Cards cards={this.filterCards()} />
       </div>
     );
